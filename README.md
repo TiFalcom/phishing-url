@@ -1,1 +1,1 @@
-# Classificate Phishing URLs
+# Classify Phishing URLs

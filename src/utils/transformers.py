@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 import re
+import scipy.sparse as sp
 
 import nltk
 from nltk.tokenize import RegexpTokenizer
@@ -140,14 +141,12 @@ class BuildFeaturesEmbeddingLeak(BaseEstimator, TransformerMixin):
         self.cv_total = CountVectorizer(decode_error='ignore').fit(X['tokenized_total'])
         
     def transform(self, X):
-        X_tmp = X.reset_index(drop=True)
-        matrix_domain = self.cv_domain.transform(X_tmp['tokenized_domain'])
-        matrix_domain = pd.DataFrame(matrix_domain.toarray(), columns=[item + '_domain' for item in list(self.cv_domain.get_feature_names_out())])
         
-        matrix_total = self.cv_total.transform(X_tmp['tokenized_total'])
-        matrix_total = pd.DataFrame(matrix_total.toarray(), columns=[item + '_total' for item in list(self.cv_total.get_feature_names_out())])
+        matrix_domain = self.cv_domain.transform(X['tokenized_domain'])
         
-        X_tmp = pd.concat([X_tmp, matrix_domain, matrix_total], axis=1)
+        matrix_total = self.cv_total.transform(X['tokenized_total'])
+        
+        X_tmp = sp.hstack([matrix_domain, matrix_total])
         
         return X_tmp
     

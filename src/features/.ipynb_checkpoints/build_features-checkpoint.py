@@ -30,18 +30,6 @@ def main():
     
     logging.info('Tabela basica salva com sucesso')
     
-    logging.info('Iniciando processamento de embedding')
-    
-    bfe = BuildFeaturesEmbedding()
-    
-    bfel = BuildFeaturesEmbeddingLeak()
-    
-    df1 = bfe.fit_transform(df)
-    
-    df1 = bfel.fit_transform(df1)
-    
-    logging.info(f'Processamento basico finalizado. Shape: {df1.shape}')
-    
     logging.info('Salvando tabela basica')
     
     df1.to_parquet('data/embedding_processed/embedding.parquet.gzip', compression='gzip', index=False)
@@ -50,11 +38,7 @@ def main():
     
     logging.info('Salvando binarios')
     
-    pickle.dump(open('model/encoders/basic_features.pkl', 'wb'), bf)
-    
-    pickle.dump(open('model/encoders/embedding_features.pkl', 'wb'), bfe)
-    
-    pickle.dump(open('model/encoders/embedding_leak_features.pkl', 'wb'), bfel)
+    pickle.dump(bf, open('model/encoders/basic_features.pkl', 'wb'))
     
     logging.info('Binarios salvos com sucesso')
     
